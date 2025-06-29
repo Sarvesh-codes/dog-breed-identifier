@@ -1,0 +1,43 @@
+# Ignore Python bytecode and cache
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+
+# Ignore environment files
+.env
+.env.*
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore virtual environments (adjust path if needed)
+venv/
+*/venv/
+dog_backend/venv/
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+
+# Ignore model checkpoints and heavy artifacts
+*.h5
+*.ckpt
+*.pb
+*.tflite
+
+# Ignore LIME and Grad-CAM outputs (optional, if temporary)
+uploads/*_lime.jpg
+uploads/*_gradcam.jpg
+
+# Ignore TensorFlow event files
+events.out.*
+
+# Ignore node_modules if you ever add frontend
+node_modules/
+
+# Ignore VSCode config
+.vscode/
