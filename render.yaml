@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: dog-breed-classifier
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: DATABASE_URL
+        value: postgres://doguser:dogpass@your-db-host:5432/dogbreed_db
+    plan: free
