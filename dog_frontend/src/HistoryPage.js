@@ -37,6 +37,32 @@ export default function HistoryPage() {
     navigate("/login");
   };
 
+  const handleClear = async (filename) => {
+    const username = localStorage.getItem("user");
+    if (!username) return;
+
+    await fetch("http://localhost:5000/clear", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, filename }),
+    });
+
+    setHistory((prev) => prev.filter((item) => item.filename !== filename));
+  };
+
+  const handleClearAll = async () => {
+    const username = localStorage.getItem("user");
+    if (!username) return;
+
+    await fetch("http://localhost:5000/clear-all", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username }),
+    });
+
+    setHistory([]);
+  };
+
   return (
     <div style={{ padding: "2rem", textAlign: "center", position: "relative" }}>
       {/* Back Button */}
@@ -96,20 +122,26 @@ export default function HistoryPage() {
               <button style={viewBtnStyle} onClick={() => openModal(item.filename)}>
                 View Image
               </button>
+              <button style={clearBtnStyle} onClick={() => handleClear(item.filename)}>
+                Clear
+              </button>
             </div>
           ))}
         </div>
       )}
 
-      {/* Modal */}
+      {/* Clear All Button */}
+      {history.length > 0 && (
+        <button style={clearAllBtnStyle} onClick={handleClearAll}>
+          🧹 Clear All
+        </button>
+      )}
+
+      {/* Modal image */}
       {modalImage && (
         <div style={modalOverlay} onClick={closeModal}>
           <div style={modalWrapper} onClick={(e) => e.stopPropagation()}>
-            <img
-              src={modalImage}
-              alt="Full"
-              style={modalImageStyle}
-            />
+            <img src={modalImage} alt="Full" style={modalImageStyle} />
             <div style={closeButtonWrapper}>
               <button onClick={closeModal} style={closeBtnStyle}>Close</button>
             </div>
@@ -146,7 +178,7 @@ const imageStyle = {
 };
 
 const viewBtnStyle = {
-  marginTop: "0.8rem",
+  marginTop: "0.5rem",
   padding: "0.4rem 0.8rem",
   backgroundColor: "#2196f3",
   color: "white",
@@ -155,7 +187,30 @@ const viewBtnStyle = {
   cursor: "pointer",
 };
 
-// Modal styles
+const clearBtnStyle = {
+  marginTop: "0.5rem",
+  padding: "0.4rem 0.8rem",
+  backgroundColor: "#d32f2f",
+  color: "white",
+  border: "none",
+  borderRadius: "4px",
+  cursor: "pointer",
+  marginLeft: "0.5rem",
+};
+
+const clearAllBtnStyle = {
+  position: "fixed",
+  bottom: "1.5rem",
+  right: "1.5rem",
+  padding: "0.8rem 1.5rem",
+  backgroundColor: "#9c27b0",
+  color: "white",
+  border: "none",
+  borderRadius: "8px",
+  fontSize: "1rem",
+  cursor: "pointer",
+};
+
 const modalOverlay = {
   position: "fixed",
   top: 0,
@@ -197,6 +252,7 @@ const closeBtnStyle = {
   borderRadius: "4px",
   cursor: "pointer",
 };
+
 
 
 

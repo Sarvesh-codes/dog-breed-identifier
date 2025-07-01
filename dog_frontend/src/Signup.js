@@ -49,7 +49,7 @@ export default function Signup() {
         </button>
         <p style={{ marginTop: "1rem" }}>
           Already have an account?{" "}
-          <Link to="/login" style={{ color: "#90caf9" }}>
+          <Link to="/login" style={{ color: "lightblue" }}>
             Log in
           </Link>
         </p>
@@ -65,7 +65,7 @@ const containerStyle = {
   alignItems: "center",
   justifyContent: "flex-start",
   minHeight: "100vh",
-  backgroundColor: "#121212",
+  backgroundColor: "black", // was #121212
   color: "white",
   paddingTop: "5rem",
 };
@@ -78,13 +78,13 @@ const titleStyle = {
 };
 
 const highlight = {
-  background: "linear-gradient(to right, #4caf50, #81c784)",
+  background: "linear-gradient(to right, lightgreen, green)", 
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",
 };
 
 const formBox = {
-  backgroundColor: "#1f1f1f",
+  backgroundColor: "#1f1f1f", 
   padding: "2rem",
   borderRadius: "10px",
   boxShadow: "0 0 15px rgba(0,0,0,0.4)",
@@ -97,15 +97,15 @@ const inputStyle = {
   padding: "0.5rem",
   width: "100%",
   borderRadius: "6px",
-  border: "1px solid #ccc",
-  backgroundColor: "#2c2c2c",
+  border: "1px solid gray", 
+  backgroundColor: "#2c2c2c", 
   color: "white",
 };
 
 const buttonStyle = {
   marginTop: "1rem",
   padding: "0.6rem 1.2rem",
-  backgroundColor: "#4caf50",
+  backgroundColor: "green", 
   border: "none",
   borderRadius: "6px",
   color: "white",

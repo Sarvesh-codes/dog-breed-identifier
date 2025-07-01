@@ -52,9 +52,8 @@ export default function ImageUpload({ onImageUploadStatus }) {
       eventSource.close();
     };
 
-  return () => eventSource.close();
-}, [limeTaskId]);
-
+    return () => eventSource.close();
+  }, [limeTaskId]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -97,34 +96,33 @@ export default function ImageUpload({ onImageUploadStatus }) {
     setAnalysis(data.analysis || []);
   };
 
-const handleGenerateLIME = async () => {
-  if (!image) return;
+  const handleGenerateLIME = async () => {
+    if (!image) return;
 
-  setLimeImageUrl("");
-  setShowLimeProgress(true);
-  setLimeProgress(0);
+    setLimeImageUrl("");
+    setShowLimeProgress(true);
+    setLimeProgress(0);
 
-  const formData = new FormData();
-  formData.append("file", image);
+    const formData = new FormData();
+    formData.append("file", image);
 
-  const res = await fetch("http://localhost:5000/lime-job", {
-    method: "POST",
-    body: formData,
-  });
+    const res = await fetch("http://localhost:5000/lime-job", {
+      method: "POST",
+      body: formData,
+    });
 
-  const data = await res.json();
-  const jobId = data.job_id;
-  setLimeTaskId(jobId); // triggers useEffect for progress tracking
-};
-
+    const data = await res.json();
+    const jobId = data.job_id;
+    setLimeTaskId(jobId); // triggers useEffect for progress tracking
+  };
 
   return (
     <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
       {preview && (
         <div
           style={{
-            backgroundColor: "#1e1e1e",
-            padding: 16,
+            backgroundColor: "black", // #1e1e1e → black
+            padding: 6,
             borderRadius: 12,
             boxShadow: "0 0 12px rgba(255,255,255,0.1)",
           }}
@@ -143,10 +141,10 @@ const handleGenerateLIME = async () => {
       )}
 
       {prediction && (
-        <h2 style={{ margin: "1.5rem 0", color: "#90ee90" }}>
+        <h2 style={{ margin: "1.5rem 0", color: "lightgreen" }}>
           Predicted: <em>{prediction}</em>{" "}
           {confidence != null && (
-            <span style={{ fontSize: 14, color: "#ccc" }}>
+            <span style={{ fontSize: 14, color: "lightgray" }}>
               ({confidence}% confidence)
             </span>
           )}
@@ -161,7 +159,7 @@ const handleGenerateLIME = async () => {
               marginRight: 8,
               padding: "8px 16px",
               backgroundColor: "purple",
-              color: "#fff",
+              color: "white",
               border: "none",
               borderRadius: 6,
               cursor: "pointer",
@@ -174,7 +172,7 @@ const handleGenerateLIME = async () => {
             style={{
               padding: "8px 16px",
               backgroundColor: "purple",
-              color: "#fff",
+              color: "white",
               border: "none",
               borderRadius: 6,
               cursor: "pointer",
@@ -190,7 +188,7 @@ const handleGenerateLIME = async () => {
         <div style={{ margin: "1rem 0", textAlign: "left" }}>
           <div
             style={{
-              backgroundColor: "#444",
+              backgroundColor: "dimgray", // #444
               height: 12,
               borderRadius: 6,
               overflow: "hidden",
@@ -199,13 +197,13 @@ const handleGenerateLIME = async () => {
             <div
               style={{
                 width: `${limeProgress}%`,
-                backgroundColor: "#00e676",
+                backgroundColor: "limegreen", // #00e676
                 height: "100%",
                 transition: "width 0.4s",
               }}
             />
           </div>
-          <p style={{ color: "#ccc", margin: "4px 0 0 0", fontSize: 14 }}>
+          <p style={{ color: "lightgray", margin: "4px 0 0 0", fontSize: 14 }}>
             LIME Progress: {limeProgress}%
           </p>
         </div>
@@ -214,7 +212,9 @@ const handleGenerateLIME = async () => {
       {/* Show final LIME image inline */}
       {limeImageUrl && (
         <div style={{ marginTop: 24 }}>
-          <h3 style={{ color: "#90ee90" }}>The regions which contributed most to the model prediction</h3>
+          <h3 style={{ color: "lightgreen" }}>
+            The regions which contributed most to the model prediction
+          </h3>
           <img
             src={limeImageUrl}
             alt="LIME"
@@ -231,10 +231,10 @@ const handleGenerateLIME = async () => {
           style={{
             marginRight: 8,
             padding: 8,
-            backgroundColor: "#333",
-            color: "#fff",
+            backgroundColor: "gray", // #333
+            color: "white",
             borderRadius: 6,
-            border: "1px solid #555",
+            border: "1px solid dimgray", // #555
           }}
         />
         <button
@@ -242,8 +242,8 @@ const handleGenerateLIME = async () => {
           disabled={!image}
           style={{
             padding: "8px 24px",
-            backgroundColor: "#4caf50",
-            color: "#fff",
+            backgroundColor: "green", // #4caf50
+            color: "white",
             border: "none",
             borderRadius: 6,
             cursor: image ? "pointer" : "not-allowed",
@@ -273,12 +273,12 @@ const handleGenerateLIME = async () => {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              backgroundColor: "#222",
+              backgroundColor: "#222", // no valid named equivalent
               padding: 24,
               borderRadius: 12,
               maxWidth: 500,
               width: "90%",
-              color: "#fff",
+              color: "white",
               textAlign: "left",
               maxHeight: "90vh",
               overflowY: "auto",
@@ -297,8 +297,8 @@ const handleGenerateLIME = async () => {
               style={{
                 marginTop: 24,
                 padding: "8px 16px",
-                backgroundColor: "#f44336",
-                color: "#fff",
+                backgroundColor: "red", // #f44336
+                color: "white",
                 border: "none",
                 borderRadius: 6,
                 cursor: "pointer",
