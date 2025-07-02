@@ -24,7 +24,6 @@ Thumbs.db
 *.log
 
 # Ignore model checkpoints and heavy artifacts
-*.h5
 *.ckpt
 *.pb
 *.tflite
