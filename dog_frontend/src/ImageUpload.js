@@ -84,7 +84,7 @@ export default function ImageUpload({ onImageUploadStatus }) {
     formData.append("file", image);
     formData.append("username", localStorage.getItem("user"));
 
-    const res = await fetch("http://localhost:5000/predict", {
+    const res = await fetch("http://localhost:5000/api/predict", {
       method: "POST",
       body: formData,
     });

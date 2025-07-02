@@ -17,8 +17,9 @@ import tensorflow as tf
 from werkzeug.security import generate_password_hash, check_password_hash
 from io import BytesIO
 from waitress import serve
+from flask import send_from_directory
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder='static', static_url_path='')
 CORS(app)
 
 UPLOAD_FOLDER = "uploads"
@@ -88,7 +89,7 @@ def serve_uploaded_image(filename):
     else:
         return jsonify({"error": "Image not found"}), 404
 
-@app.route("/predict", methods=["POST"])
+@app.route("/api/predict", methods=["POST"])
 def predict():
     if "file" not in request.files:
         return jsonify({"error": "No file provided"}), 400
@@ -126,7 +127,7 @@ def predict():
 
     return jsonify({"breed": breed, "confidence": conf, "analysis": analysis})
 
-@app.route("/signup", methods=["POST"])
+@app.route("/api/signup", methods=["POST"])
 def signup():
     data = request.get_json()
     username = data.get("username")
@@ -145,7 +146,7 @@ def signup():
         cur.close()
         conn.close()
 
-@app.route("/login", methods=["POST"])
+@app.route("/api/login", methods=["POST"])
 def login():
     data = request.get_json()
     username = data.get("username")
@@ -222,7 +223,7 @@ def lime_progress(job_id):
             time.sleep(0.5)
     return Response(gen(), mimetype="text/event-stream")
 
-@app.route("/history", methods=["POST"])
+@app.route("/api/history", methods=["POST"])
 def get_history():
     data = request.get_json()
     username = data.get("username")
@@ -239,6 +240,53 @@ def get_history():
         for r in rows
     ]})
 
+@app.route("/api/clear", methods=["POST"])
+def clear_image():
+    data = request.get_json()
+    username = data.get("username")
+    filename = data.get("filename")
+    if not (username and filename):
+        return jsonify({"error": "Missing data"}), 400
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM history WHERE username = %s AND filename = %s", (username, filename))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return jsonify({"message": "Entry cleared"})
+
+@app.route("/api/clear-all", methods=["POST"])
+def clear_all_images():
+    data = request.get_json()
+    username = data.get("username")
+    if not username:
+        return jsonify({"error": "Missing username"}), 400
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM history WHERE username = %s", (username,))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return jsonify({"message": "All history cleared"})
+
+
+@app.route('/')
+def serve_index():
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    # First try to serve static files
+    static_file = os.path.join(app.static_folder, path)
+    if os.path.exists(static_file) and not path.startswith('api/'):
+        return send_from_directory(app.static_folder, path)
+    # Then fallback to index.html for React Router
+    return send_from_directory(app.static_folder, 'index.html')
+
+# 🔍 Debug: List all registered routes before running server
+print("🔍 Registered Routes:")
+for rule in app.url_map.iter_rules():
+    print(f"{rule.methods} -> {rule.rule}")
+
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=5000)
-

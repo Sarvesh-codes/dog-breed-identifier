@@ -11,7 +11,7 @@ export default function HistoryPage() {
       const username = localStorage.getItem("user");
       if (!username) return;
 
-      const res = await fetch("http://localhost:5000/history", {
+      const res = await fetch("http://localhost:5000/api/history", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username }),
@@ -23,6 +23,7 @@ export default function HistoryPage() {
 
     fetchHistory();
   }, []);
+
 
   const openModal = (filename) => {
     setModalImage(`http://localhost:5000/uploads/${filename}`);
@@ -41,7 +42,7 @@ export default function HistoryPage() {
     const username = localStorage.getItem("user");
     if (!username) return;
 
-    await fetch("http://localhost:5000/clear", {
+    await fetch("http://localhost:5000/api/clear", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, filename }),
@@ -54,7 +55,7 @@ export default function HistoryPage() {
     const username = localStorage.getItem("user");
     if (!username) return;
 
-    await fetch("http://localhost:5000/clear-all", {
+    await fetch("http://localhost:5000/api/clear-all", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username }),
