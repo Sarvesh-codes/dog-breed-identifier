@@ -41,3 +41,4 @@ node_modules/
 
 # Ignore VSCode config
 .vscode/
+"dog_backend/retrain.py" 
