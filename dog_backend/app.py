@@ -27,13 +27,10 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 lime_jobs = {}
 
 def get_db_connection():
-    return psycopg2.connect(
-        dbname="dogbreed_db",
-        user="doguser",
-        password="dogpass",
-        host="localhost",
-        port="5432"
-    )
+    db_url = os.environ.get("DATABASE_URL")
+    if not db_url:
+        raise Exception("DATABASE_URL not set in environment variables")
+    return psycopg2.connect(db_url)
 
 def init_db():
     conn = get_db_connection()
