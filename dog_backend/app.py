@@ -180,7 +180,7 @@ def start_lime_job():
     return jsonify({"job_id": job_id})
 
 def run_lime(job_id, path):
-    """img = np.array(Image.open(path).resize((224, 224))) / 255.0
+    img = np.array(Image.open(path).resize((224, 224))) / 255.0
     explainer = lime_image.LimeImageExplainer()
 
     def batch_predict(images):
@@ -192,45 +192,6 @@ def run_lime(job_id, path):
 
     explanation = explainer.explain_instance(img, batch_predict, top_labels=1, hide_color=0, num_samples=1000)
     temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=True, num_features=5, hide_rest=False)
-
-    buffer = BytesIO()
-    plt.imsave(buffer, mark_boundaries(temp, mask), format='jpg')
-    buffer.seek(0)
-    image_bytes = buffer.read()
-
-    filename = path.replace(".jpg", "_lime.jpg").split(os.sep)[-1]
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("INSERT INTO uploads (filename, image, uploaded_at) VALUES (%s, %s, %s)",
-                (filename, psycopg2.Binary(image_bytes), datetime.now()))
-    conn.commit()
-    cur.close()
-    conn.close()
-
-    if os.path.exists(path):
-        os.remove(path)
-
-    lime_jobs[job_id]["progress"] = 100
-    lime_jobs[job_id]["lime_image"] = filename"""  
-
-    img = np.array(Image.open(path).resize((128, 128))) / 255.0  # ⬅️ Downsize image
-    explainer = lime_image.LimeImageExplainer()
-
-    def batch_predict(images):
-        batch_predict.counter += len(images)
-        if batch_predict.counter % 10 == 0:
-            lime_jobs[job_id]["progress"] = min(100, batch_predict.counter // 10)
-        return model.predict(np.array(images))
-    batch_predict.counter = 0
-
-    # ⬇️ Reduce num_samples from 1000 to 300 or 500 to avoid memory overuse
-    explanation = explainer.explain_instance(
-        img, batch_predict, top_labels=1, hide_color=0, num_samples=300
-    )
-
-    temp, mask = explanation.get_image_and_mask(
-        explanation.top_labels[0], positive_only=True, num_features=5, hide_rest=False
-    )
 
     buffer = BytesIO()
     plt.imsave(buffer, mark_boundaries(temp, mask), format='jpg')
@@ -325,11 +286,6 @@ def serve_static(path):
         return send_from_directory(app.static_folder, path)
     # Then fallback to index.html for React Router
     return send_from_directory(app.static_folder, 'index.html')
-
-# 🔍 Debug: List all registered routes before running server
-print("🔍 Registered Routes:")
-for rule in app.url_map.iter_rules():
-    print(f"{rule.methods} -> {rule.rule}")
 
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=5000)

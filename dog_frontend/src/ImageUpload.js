@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./ImageUpload.css";
 
 export default function ImageUpload({ onImageUploadStatus }) {
   const [image, setImage] = useState(null);
@@ -7,16 +8,13 @@ export default function ImageUpload({ onImageUploadStatus }) {
   const [confidence, setConfidence] = useState(null);
   const [analysis, setAnalysis] = useState([]);
 
-  // Modal for top-5 analysis
   const [showPopup, setShowPopup] = useState(false);
 
-  // LIME-related state
   const [limeTaskId, setLimeTaskId] = useState(null);
   const [limeProgress, setLimeProgress] = useState(0);
   const [showLimeProgress, setShowLimeProgress] = useState(false);
   const [limeImageUrl, setLimeImageUrl] = useState("");
 
-  // Poll LIME progress whenever we have a task ID
   useEffect(() => {
     if (!limeTaskId) return;
 
@@ -24,7 +22,7 @@ export default function ImageUpload({ onImageUploadStatus }) {
     setLimeProgress(0);
 
     const eventSource = new EventSource(
-      `https://dog-breed-identifier-p98j.onrender.com/lime-progress/${limeTaskId}`
+      `/lime-progress/${limeTaskId}`
     );
 
     eventSource.onmessage = (event) => {
@@ -37,7 +35,7 @@ export default function ImageUpload({ onImageUploadStatus }) {
       if (data.lime_image) {
         setLimeImageUrl(`https://dog-breed-identifier-p98j.onrender.com/uploads/${data.lime_image}`);
         setShowLimeProgress(false);
-        eventSource.close(); // Stop listening after completion
+        eventSource.close();
       }
 
       if (data.error) {
@@ -113,196 +111,86 @@ export default function ImageUpload({ onImageUploadStatus }) {
 
     const data = await res.json();
     const jobId = data.job_id;
-    setLimeTaskId(jobId); // triggers useEffect for progress tracking
+    setLimeTaskId(jobId);
   };
 
   return (
-    <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
+    <div className="image-upload-container">
       {preview && (
-        <div
-          style={{
-            backgroundColor: "black", // #1e1e1e → black
-            padding: 6,
-            borderRadius: 12,
-            boxShadow: "0 0 12px rgba(255,255,255,0.1)",
-          }}
-        >
-          <img
-            src={preview}
-            alt="Preview"
-            style={{
-              width: "100%",
-              maxHeight: 500,
-              objectFit: "contain",
-              borderRadius: 10,
-            }}
-          />
+        <div className="image-preview">
+          <img src={preview} alt="Preview" />
         </div>
       )}
 
       {prediction && (
-        <h2 style={{ margin: "1.5rem 0", color: "lightgreen" }}>
+        <h2 className="prediction-title">
           Predicted: <em>{prediction}</em>{" "}
           {confidence != null && (
-            <span style={{ fontSize: 14, color: "lightgray" }}>
-              ({confidence}% confidence)
-            </span>
+            <span className="prediction-confidence">({confidence}% confidence)</span>
           )}
         </h2>
       )}
 
       {analysis.length > 0 && (
-        <div style={{ marginBottom: 16 }}>
-          <button
-            onClick={() => setShowPopup(true)}
-            style={{
-              marginRight: 8,
-              padding: "8px 16px",
-              backgroundColor: "purple",
-              color: "white",
-              border: "none",
-              borderRadius: 6,
-              cursor: "pointer",
-            }}
-          >
+        <div>
+          <button className="action-button" onClick={() => setShowPopup(true)}>
             View Top Predictions
           </button>
-          <button
-            onClick={handleGenerateLIME}
-            style={{
-              padding: "8px 16px",
-              backgroundColor: "purple",
-              color: "white",
-              border: "none",
-              borderRadius: 6,
-              cursor: "pointer",
-            }}
-          >
+          <button className="action-button" onClick={handleGenerateLIME}>
             Generate LIME Analysis
           </button>
         </div>
       )}
 
-      {/* LIME Progress Bar */}
       {showLimeProgress && (
-        <div style={{ margin: "1rem 0", textAlign: "left" }}>
-          <div
-            style={{
-              backgroundColor: "dimgray", // #444
-              height: 12,
-              borderRadius: 6,
-              overflow: "hidden",
-            }}
-          >
+        <div className="lime-progress-bar">
+          <div className="lime-progress-track">
             <div
-              style={{
-                width: `${limeProgress}%`,
-                backgroundColor: "limegreen", // #00e676
-                height: "100%",
-                transition: "width 0.4s",
-              }}
+              className="lime-progress-fill"
+              style={{ width: `${limeProgress}%` }}
             />
           </div>
-          <p style={{ color: "lightgray", margin: "4px 0 0 0", fontSize: 14 }}>
-            LIME Progress: {limeProgress}%
-          </p>
+          <p className="lime-progress-label">LIME Progress: {limeProgress}%</p>
         </div>
       )}
 
-      {/* Show final LIME image inline */}
       {limeImageUrl && (
-        <div style={{ marginTop: 24 }}>
-          <h3 style={{ color: "lightgreen" }}>
-            The regions which contributed most to the model prediction
-          </h3>
-          <img
-            src={limeImageUrl}
-            alt="LIME"
-            style={{ width: "100%", borderRadius: 8 }}
-          />
+        <div className="lime-image-section">
+          <h3>The regions which contributed most to the model prediction</h3>
+          <img src={limeImageUrl} alt="LIME" />
         </div>
       )}
 
-      <div style={{ marginTop: 24 }}>
+      <div className="upload-section">
         <input
           type="file"
           accept="image/*"
           onChange={handleFileChange}
-          style={{
-            marginRight: 8,
-            padding: 8,
-            backgroundColor: "gray", // #333
-            color: "white",
-            borderRadius: 6,
-            border: "1px solid dimgray", // #555
-          }}
+          className="upload-input"
         />
         <button
           onClick={handleUpload}
           disabled={!image}
-          style={{
-            padding: "8px 24px",
-            backgroundColor: "green", // #4caf50
-            color: "white",
-            border: "none",
-            borderRadius: 6,
-            cursor: image ? "pointer" : "not-allowed",
-          }}
+          className="upload-button"
         >
           Upload & Predict
         </button>
       </div>
 
-      {/* Analysis Popup */}
       {showPopup && (
-        <div
-          onClick={() => setShowPopup(false)}
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "rgba(0,0,0,0.7)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: "#222", // no valid named equivalent
-              padding: 24,
-              borderRadius: 12,
-              maxWidth: 500,
-              width: "90%",
-              color: "white",
-              textAlign: "left",
-              maxHeight: "90vh",
-              overflowY: "auto",
-            }}
-          >
-            <h3 style={{ marginBottom: 16 }}>Top 5 Predictions</h3>
-            <ul style={{ listStyle: "none", paddingLeft: 0 }}>
+        <div className="popup-overlay" onClick={() => setShowPopup(false)}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Top 5 Predictions</h3>
+            <ul>
               {analysis.map((item, idx) => (
-                <li key={idx} style={{ marginBottom: 8 }}>
+                <li key={idx}>
                   {idx + 1}. <strong>{item.breed}</strong> — {item.confidence}%
                 </li>
               ))}
             </ul>
             <button
+              className="popup-close-button"
               onClick={() => setShowPopup(false)}
-              style={{
-                marginTop: 24,
-                padding: "8px 16px",
-                backgroundColor: "red", // #f44336
-                color: "white",
-                border: "none",
-                borderRadius: 6,
-                cursor: "pointer",
-              }}
             >
               Close
             </button>
