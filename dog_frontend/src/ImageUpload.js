@@ -24,7 +24,7 @@ export default function ImageUpload({ onImageUploadStatus }) {
     setLimeProgress(0);
 
     const eventSource = new EventSource(
-      `http://localhost:5000/lime-progress/${limeTaskId}`
+      `https://dog-breed-identifier-p98j.onrender.com/lime-progress/${limeTaskId}`
     );
 
     eventSource.onmessage = (event) => {
@@ -35,7 +35,7 @@ export default function ImageUpload({ onImageUploadStatus }) {
       }
 
       if (data.lime_image) {
-        setLimeImageUrl(`http://localhost:5000/uploads/${data.lime_image}`);
+        setLimeImageUrl(`https://dog-breed-identifier-p98j.onrender.com/uploads/${data.lime_image}`);
         setShowLimeProgress(false);
         eventSource.close(); // Stop listening after completion
       }
@@ -84,7 +84,7 @@ export default function ImageUpload({ onImageUploadStatus }) {
     formData.append("file", image);
     formData.append("username", localStorage.getItem("user"));
 
-    const res = await fetch("http://localhost:5000/api/predict", {
+    const res = await fetch("https://dog-breed-identifier-p98j.onrender.com/api/predict", {
       method: "POST",
       body: formData,
     });
@@ -106,7 +106,7 @@ export default function ImageUpload({ onImageUploadStatus }) {
     const formData = new FormData();
     formData.append("file", image);
 
-    const res = await fetch("http://localhost:5000/lime-job", {
+    const res = await fetch("https://dog-breed-identifier-p98j.onrender.com/lime-job", {
       method: "POST",
       body: formData,
     });

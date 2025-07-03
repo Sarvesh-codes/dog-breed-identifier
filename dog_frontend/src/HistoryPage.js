@@ -11,7 +11,7 @@ export default function HistoryPage() {
       const username = localStorage.getItem("user");
       if (!username) return;
 
-      const res = await fetch("http://localhost:5000/api/history", {
+      const res = await fetch("https://dog-breed-identifier-p98j.onrender.com/api/history", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username }),
@@ -26,7 +26,7 @@ export default function HistoryPage() {
 
 
   const openModal = (filename) => {
-    setModalImage(`http://localhost:5000/uploads/${filename}`);
+    setModalImage(`https://dog-breed-identifier-p98j.onrender.com/uploads/${filename}`);
   };
 
   const closeModal = () => {
@@ -42,7 +42,7 @@ export default function HistoryPage() {
     const username = localStorage.getItem("user");
     if (!username) return;
 
-    await fetch("http://localhost:5000/api/clear", {
+    await fetch("https://dog-breed-identifier-p98j.onrender.com/api/clear", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, filename }),
@@ -55,7 +55,7 @@ export default function HistoryPage() {
     const username = localStorage.getItem("user");
     if (!username) return;
 
-    await fetch("http://localhost:5000/api/clear-all", {
+    await fetch("https://dog-breed-identifier-p98j.onrender.com/api/clear-all", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username }),
@@ -111,7 +111,7 @@ export default function HistoryPage() {
           {history.map((item, index) => (
             <div key={index} style={cardStyle}>
               <img
-                src={`http://localhost:5000/uploads/${item.filename}`}
+                src={`https://dog-breed-identifier-p98j.onrender.com/uploads/${item.filename}`}
                 alt="Uploaded"
                 style={imageStyle}
               />
