@@ -73,11 +73,11 @@ def init_db():
 
 init_db()
 
-# ✅ Load fixed model only
+#Load model
 model = tf.keras.models.load_model("dog_breed_model.h5")
 df = pd.read_csv("breeds.csv")
 class_names = sorted(df["breed"].unique().tolist())
-print("✅ Model loaded: dog_breed_model.h5")
+print("Model loaded: dog_breed_model.h5")
 
 @app.route("/uploads/<path:filename>")
 def serve_uploaded_image(filename):
