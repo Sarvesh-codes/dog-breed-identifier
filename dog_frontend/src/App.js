@@ -1,31 +1,27 @@
 import React, { useEffect, useState } from "react";
-import {BrowserRouter as Router,Routes,Route,Navigate,useNavigate,useLocation} from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 
 import ImageUpload from "./ImageUpload";
 import Login from "./Login";
 import Signup from "./Signup";
 import HistoryPage from "./HistoryPage";
+import "./App.css"; // Import the CSS
 
 function LogoutButton({ navigate }) {
   const handleLogout = () => {
     localStorage.removeItem("user");
     navigate("/login");
   };
+
   return (
-    <button
-      onClick={handleLogout}
-      style={{
-        position: "absolute",
-        top: "1rem",
-        right: "1rem",
-        backgroundColor: "#ff4d4d",
-        color: "white",
-        border: "none",
-        padding: "0.5rem 1rem",
-        borderRadius: "6px",
-        cursor: "pointer"
-      }}
-    >
+    <button onClick={handleLogout} className="logout-button">
       Logout
     </button>
   );
@@ -34,9 +30,8 @@ function LogoutButton({ navigate }) {
 function App() {
   const isLoggedIn = !!localStorage.getItem("user");
   const [imageUploaded, setImageUploaded] = useState(false);
-
   const location = useLocation();
-  const navigate = useNavigate(); // ✅ only used here
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.pathname === "/predict") {
@@ -45,14 +40,7 @@ function App() {
   }, [location.pathname]);
 
   return (
-    <div
-      style={{
-        backgroundColor: "#121212",
-        minHeight: "100vh",
-        color: "white",
-        position: "relative"
-      }}
-    >
+    <div className="app-container">
       <Routes>
         <Route
           path="/"
@@ -60,7 +48,6 @@ function App() {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-
         <Route
           path="/predict"
           element={
@@ -68,33 +55,15 @@ function App() {
               <>
                 <LogoutButton navigate={navigate} />
                 <div
-                  style={{
-                    textAlign: "center",
-                    paddingTop: imageUploaded ? "2rem" : "18rem",
-                    transition: "padding-top 0.3s ease"
-                  }}
+                  className={`predict-content ${
+                    imageUploaded ? "image-uploaded" : "image-not-uploaded"
+                  }`}
                 >
-                  <h1
-                    style={{
-                      fontSize: "2.5rem",
-                      marginBottom: "1rem",
-                      color: "white"
-                    }}
-                  >
-                    🐶 Dog Breed Identifier
-                  </h1>
+                  <h1 className="title">🐶 Dog Breed Identifier</h1>
                   <ImageUpload onImageUploadStatus={setImageUploaded} />
                   <button
                     onClick={() => navigate("/history")}
-                    style={{
-                      marginTop: "1rem",
-                      backgroundColor: "#2196f3",
-                      color: "white",
-                      border: "none",
-                      padding: "0.5rem 1rem",
-                      borderRadius: "6px",
-                      cursor: "pointer"
-                    }}
+                    className="history-button"
                   >
                     View History
                   </button>
@@ -105,7 +74,6 @@ function App() {
             )
           }
         />
-
         <Route
           path="/history"
           element={
@@ -131,3 +99,4 @@ export default function AppWrapper() {
     </Router>
   );
 }
+
