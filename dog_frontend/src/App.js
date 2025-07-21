@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
-
+import {BrowserRouter as Router,Routes,Route,Navigate,useNavigate,useLocation,} from "react-router-dom";
 import ImageUpload from "./ImageUpload";
 import Login from "./Login";
 import Signup from "./Signup";
 import HistoryPage from "./HistoryPage";
-import "./App.css"; // Import the CSS
+import "./App.css"; 
 
 function LogoutButton({ navigate }) {
   const handleLogout = () => {
