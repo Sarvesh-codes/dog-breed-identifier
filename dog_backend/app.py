@@ -273,18 +273,8 @@ def clear_all_images():
     conn.close()
     return jsonify({"message": "All history cleared"})
 
-
 @app.route('/')
 def serve_index():
-    return send_from_directory(app.static_folder, 'index.html')
-
-@app.route('/<path:path>')
-def serve_static(path):
-    # First try to serve static files
-    static_file = os.path.join(app.static_folder, path)
-    if os.path.exists(static_file) and not path.startswith('api/'):
-        return send_from_directory(app.static_folder, path)
-    # Then fallback to index.html for React Router
     return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == "__main__":
