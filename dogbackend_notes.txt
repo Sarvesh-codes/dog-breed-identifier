@@ -1,0 +1,11 @@
+app.py
+
+REAL : float in sql
+
+BYTEA : byte array.used to store binary data like images.
+
+jsonify cannot send binary data so use Response
+
+request : accepts formdata
+
+uuid.uuid4()-128 bit unique value
