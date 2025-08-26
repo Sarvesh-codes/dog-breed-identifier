@@ -74,10 +74,10 @@ def init_db():
 init_db()
 
 #Load model
-model = tf.keras.models.load_model("dog_breed_model")
+model = tf.keras.models.load_model("dog_breed_model.keras")
 df = pd.read_csv("breeds.csv")
 class_names = sorted(df["breed"].unique().tolist())
-print("Model loaded: dog_breed_model")
+print("Model loaded: dog_breed_model.keras")
 
 @app.route("/uploads/<path:filename>")
 def serve_uploaded_image(filename):
